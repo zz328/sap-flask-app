@@ -35,6 +35,7 @@ def isPrime(number):
     while (i * i <= number):
         if number % i == 0:
             return False
+        i += 1
     
     primes.add(number)
     largestPrime = number

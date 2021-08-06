@@ -2,28 +2,53 @@ from flask import Flask, abort, render_template
 
 # create and configure the app
 app = Flask(__name__, instance_relative_config=True)
+primes = set([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71])
+largestPrime = 71
 
 #app root
 @app.route("/")
 def index():
     return "Welcome to the root page"
 
-#shows odd or even numbers within the range
-@app.route("/<number>/<isOdd>")
-def print_numbers(number, isOdd):
-    # goes to page not found if user didn't have odd or even in path
-    if (isOdd != "odd") and (isOdd != "even"):
+@app.route("/<number>/<option>")
+def print_numbers(number, option):
+    if (option != "odd") and (option != "even") and (option != "prime"):
         abort(404, description="Page not found");
 
     result = ''
 
     for i in range(1, int(number)+1):
-        if (isOdd == 'odd' and i % 2 == 1) or (isOdd == 'even' and i%2 == 0):
+        if (option == 'odd' and isOdd(i)) or (option == 'even' and isEven(i)) or (option == "prime" and isPrime(i)):
             result += str(i) + ' '
 
     return result
 
-# shows numbers 1-number 
+def isPrime(number):
+    global largestPrime
+    if number <= largestPrime:
+        if number in primes:
+            return True
+        else:
+            return False
+
+    i = 2
+    while (i * i <= number):
+        if number % i == 0:
+            return False
+    
+    primes.add(number)
+    largestPrime = number
+    return True
+
+def isEven(number):
+    return (number % 2 == 0)
+
+def isOdd(number):
+    return (number % 2 == 1)
+
+
+
+
 @app.route("/<number>")
 def print_all_numbers(number):
     result = ''

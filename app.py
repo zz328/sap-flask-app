@@ -1,6 +1,7 @@
 from flask import Flask, abort, render_template
 
-app = Flask(__name__)
+# create and configure the app
+app = Flask(__name__, instance_relative_config=True)
 
 @app.route("/")
 def index():
@@ -33,7 +34,3 @@ def print_all_numbers(number):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
-# main driver function
-if __name__ == '__main__':
-    app.run()
